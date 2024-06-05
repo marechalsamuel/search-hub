@@ -72,6 +72,7 @@ export const EntryForm = ({
     register,
     watch,
     formState: { errors, dirtyFields },
+    setFocus,
   } = useForm<Entry>({
     resolver: zodResolver(entitySchema),
     defaultValues,
@@ -80,14 +81,12 @@ export const EntryForm = ({
   const values = watch();
 
   useEffect(() => {
+    setFocus("url");
     reset(defaultValues);
-  }, [defaultValues, reset]);
+  }, [defaultValues, reset, setFocus]);
 
   return (
-    <Box
-      p="20px"
-      {...props}
-    >
+    <Box p="20px" {...props}>
       <form onSubmit={handleSubmit(handleEntryFormSubmit)}>
         <VStack>
           <FormControl isInvalid={!!dirtyFields.url && !!errors.url}>
@@ -97,19 +96,19 @@ export const EntryForm = ({
               <FavIcon {...values} />
             </Flex>
             <FormErrorMessage>{errors.url?.message}</FormErrorMessage>
-            {!errors.url && (
-              <FormHelperText>
-                <Flex align="center" gap="5px">
-                  <InfoIcon />
-                  <Text>The URL has to be valid and contain</Text>
-                  <Code>{`{{search}}`}</Code>
-                </Flex>
-              </FormHelperText>
-            )}
+            <FormHelperText>
+              <Flex align="center" gap="5px">
+                <InfoIcon />
+                <Text>The URL has to be valid and contain</Text>
+                <Code>{`{{search}}`}</Code>
+              </Flex>
+            </FormHelperText>
           </FormControl>
           <FormControl>
             <FormLabel>Name</FormLabel>
-            <Input {...register("name")} />
+            <Flex align="center" gap="5px">
+              <Input {...register("name")} />
+            </Flex>
             <FormHelperText>
               <Flex align="center" gap="5px">
                 <InfoIcon /> Leave name empty to display only website favicon.

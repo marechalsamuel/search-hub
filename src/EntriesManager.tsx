@@ -1,16 +1,14 @@
 import {
   Button,
-  FormControl,
-  FormLabel,
   HStack,
   Icon,
   IconButton,
+  Link,
   StackProps,
-  Switch,
-  VStack,
+  Tag,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
-import { Entry, EntryTitle } from "./Entry";
+import { Entry, EntryLink } from "./Entry";
 import {
   DndContext,
   closestCenter,
@@ -28,18 +26,29 @@ import {
   horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Dispatch, SetStateAction, useState } from "react";
-import { TbReorder } from "react-icons/tb";
+import { Dispatch, SetStateAction } from "react";
 import { MdDragIndicator } from "react-icons/md";
 
 export type SortableItemProps = {
   id: string;
   entry: Entry;
   isSelected: boolean;
+  onClick: () => void;
 };
-export const SortableItem = ({ id, entry, isSelected }: SortableItemProps) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id });
+export const SortableItem = ({
+  id,
+  entry,
+  isSelected,
+  onClick,
+}: SortableItemProps) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -47,17 +56,33 @@ export const SortableItem = ({ id, entry, isSelected }: SortableItemProps) => {
   };
 
   return (
-    <Button
+    <Tag
+      p="0"
+      {...attributes}
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
       key={entry.id}
       colorScheme={isSelected ? "blue" : "gray"}
-      leftIcon={<Icon as={MdDragIndicator} />}
+      display="flex"
+      alignItems="center"
+      onClick={onClick}
     >
-      <EntryTitle {...entry} />
-    </Button>
+      <IconButton
+        as={Link}
+        variant="ghost"
+        aria-label="Reorder"
+        ref={setActivatorNodeRef}
+        {...listeners}
+        onClick={onClick}
+        cursor="grab"
+        _active={{
+          cursor: "grabbing",
+        }}
+        minW="20px"
+        icon={<Icon as={MdDragIndicator} />}
+      />
+      <EntryLink entry={entry} disabled onClick={onClick} variant="ghost" />
+    </Tag>
   );
 };
 
@@ -65,11 +90,13 @@ export type DraggableEntriesProps = {
   entries: Entry[];
   setEntries: Dispatch<SetStateAction<Entry[] | undefined>>;
   selectedEntry?: Entry;
+  onClick: (entry?: Entry) => void;
 };
 export const DraggableEntries = ({
   entries,
   setEntries,
   selectedEntry,
+  onClick,
 }: DraggableEntriesProps) => {
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -100,6 +127,7 @@ export const DraggableEntries = ({
       >
         {entries.map((entry) => (
           <SortableItem
+            onClick={() => onClick(entry)}
             key={entry.id}
             id={entry.id}
             entry={entry}
@@ -108,27 +136,6 @@ export const DraggableEntries = ({
         ))}
       </SortableContext>
     </DndContext>
-  );
-};
-
-export type EntriesProps = {
-  entries: Entry[];
-  onClick: (entry?: Entry) => void;
-  selectedEntry?: Entry;
-};
-export const Entries = ({ entries, onClick, selectedEntry }: EntriesProps) => {
-  return (
-    <HStack>
-      {entries.map((entry) => (
-        <Button
-          key={entry.id}
-          onClick={() => onClick(entry)}
-          colorScheme={selectedEntry?.id === entry.id ? "blue" : "gray"}
-        >
-          <EntryTitle {...entry} />
-        </Button>
-      ))}
-    </HStack>
   );
 };
 
@@ -146,53 +153,23 @@ export const EntriesManager = ({
   selectedEntry,
   ...props
 }: EntriesManagerProps) => {
-  const [isDragMode, setIsDragMode] = useState(false);
-
-  const dragModeTitle = isDragMode
-    ? "Drag and drop to reorder"
-    : "Toggle to reorder";
-
   return (
-    <VStack w="100%" {...props} justify="flex-end">
-      <HStack w="100%" justify="space-between">
-        <IconButton
+      <HStack {...props} w="100%" justify="flex-end" align="flex-end">
+        <DraggableEntries
+          entries={entries}
+          onClick={onClick}
+          setEntries={setEntries}
+          selectedEntry={selectedEntry}
+        />
+        <Button
           onClick={() => onClick(undefined)}
           aria-label="New entry"
           title="New entry"
-          icon={<AddIcon />}
+          leftIcon={<AddIcon />}
           colorScheme={!selectedEntry ? "blue" : "gray"}
-        />
-        {entries.length > 1 && (
-          <FormLabel>
-            <FormControl display="flex" gap="5px">
-              <HStack>
-                <Icon as={TbReorder} title={dragModeTitle} />
-                <Switch
-                  checked={isDragMode}
-                  onChange={(e) => setIsDragMode(e.target.checked)}
-                  title={dragModeTitle}
-                />
-              </HStack>
-            </FormControl>
-          </FormLabel>
-        )}
+        >
+          New entry
+        </Button>
       </HStack>
-      <HStack w="100%" justify="flex-end">
-        {isDragMode && (
-          <DraggableEntries
-            entries={entries}
-            setEntries={setEntries}
-            selectedEntry={selectedEntry}
-          />
-        )}
-        {!isDragMode && (
-          <Entries
-            entries={entries}
-            onClick={onClick}
-            selectedEntry={selectedEntry}
-          />
-        )}
-      </HStack>
-    </VStack>
   );
 };

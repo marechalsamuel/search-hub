@@ -7,6 +7,7 @@ import {
   Heading,
   HStack,
   useColorMode,
+  ColorMode,
 } from "@chakra-ui/react";
 import { useLocalStorage } from "react-use";
 import { Entry } from "./Entry";
@@ -49,10 +50,14 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
     }
   }, [entries, storedData, sendToStorage]);
   const [selectedEntry, setSelectedEntry] = useState<Entry | undefined>();
-  const handleSelectedEntryChange = (entry: Entry | undefined) => {
-    setSelectedEntry(entry);
-  }
   const { colorMode, toggleColorMode } = useColorMode();
+  const { sendToStorage: sendColorModeToStorage } =
+    useExtensionStorage<ColorMode>("colorMode");
+  const handleColorToggle = () => {
+    toggleColorMode();
+    sendColorModeToStorage(colorMode === "light" ? "dark" : "light");
+  }
+
   return (
     <Box pos="absolute" top="10px" right="10px" bottom="10px" left="10px">
       <VStack h="100%" w="100%">
@@ -60,13 +65,13 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
           <IconButton
             icon={colorMode === "light" ? <FaMoon /> : <FaSun />}
             aria-label="Fullscreen"
-            onClick={toggleColorMode}
+            onClick={handleColorToggle}
           />
           <HStack>
             <Img src="search-hub-96.png" />
             <Heading>Search Hub</Heading>
           </HStack>
-          {fullScreen ? (<div></div>): (
+          {!fullScreen && (
             <IconButton
               icon={<MdFullscreen />}
               aria-label="Fullscreen"

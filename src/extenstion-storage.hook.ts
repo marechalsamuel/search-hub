@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
-// Custom hook for extension storage and messaging
+type StorageChange = browser.storage.StorageChange | chrome.storage.StorageChange
 const useExtensionStorage = <T>(key: string) => {
     const [storedData, setStoredData] = useState<T | null>(null);
     const storage = useMemo(() => {
@@ -16,26 +16,23 @@ const useExtensionStorage = <T>(key: string) => {
     }, []);
 
     useEffect(() => {
-        // Fetch stored data when component mounts
         storage?.get(key).then((result) => {
-            setStoredData(result[key] as T); // Assuming myData contains the stored array
+            setStoredData(result[key]);
         });
 
-        const storageChangeListener = (changes: { [key: string]: browser.storage.StorageChange | chrome.storage.StorageChange; }) => {
-            setStoredData(changes[key].newValue as T); // Assuming myData contains the stored array
+        const storageChangeListener = (changes: { [key: string]: StorageChange }) => {
+            if (!changes[key]) return;
+            setStoredData(changes[key].newValue);
         };
 
-        // Listen for changes in storage
         storage?.onChanged.addListener(storageChangeListener);
 
         return () => {
             storage?.onChanged.removeListener(storageChangeListener);
         };
-    }, [key, storage]);
+    }, [key, setStoredData, storage]);
 
     const sendToStorage = (data: T) => {
-
-        // Save data to storage
         storage?.set({ [key]: data });
     };
 

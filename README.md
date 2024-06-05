@@ -30,3 +30,15 @@ Made with
 - chakra-ui
 - zod
 - uuid
+
+## TODO
+- darkmode
+- fix title button page {{search}} => actual search
+- "+" =>  "+ New entry"
+- always reorderable + click
+- buttons reorderable => focus url
+- "+ New entry" with other buttons
+
+- "+ New entry" => always focus url
+- couleur lien quand il y a du texte
+- tuto pour autorisations

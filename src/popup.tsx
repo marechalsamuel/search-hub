@@ -1,13 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { Settings } from './Settings.tsx'
-import { ChakraProvider } from '@chakra-ui/react'
-import theme from './theme.ts'
+import { ChakraProvider } from './ChakraProvider'
 import "./popup.css";
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+const rootId = 'root';
+ReactDOM.createRoot(document.getElementById(rootId)!).render(
   <React.StrictMode>
-    <ChakraProvider cssVarsRoot='#root' theme={theme}>
+    <ChakraProvider cssVarsRoot={`#${rootId}`}>
         <Settings />
     </ChakraProvider>
   </React.StrictMode>,

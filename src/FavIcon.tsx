@@ -17,17 +17,19 @@ export type FavIconProps = Entry & {
   url: string;
   name?: string;
   size?: number;
+  search?: string;
 };
 
-export const FavIcon = ({ url, name, size = DEFAULT_SIZE }: FavIconProps) => {
+export const FavIcon = ({ url, name, size = DEFAULT_SIZE, search = "" }: FavIconProps) => {
   const favicon = getFavicon(url);
+  const href = url.replace("{{search}}", search);
   if (!favicon) return null;
   return (
     <>
       <Image
         src={favicon}
-        title={name || url}
-        alt={name || url}
+        title={name || href}
+        alt={name || href}
         width={`${size}px`}
         height={`${size}px`}
       />

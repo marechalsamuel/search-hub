@@ -1,48 +1,39 @@
 import * as z from "zod";
 import { FavIcon } from "./FavIcon";
 import { entitySchema } from "./entity.schema";
-import { Button, Flex, IconButton, Link, Text, theme } from "@chakra-ui/react";
+import { Button, ButtonProps, IconButton, Link, Text } from "@chakra-ui/react";
 
 export type Entry = z.infer<typeof entitySchema>;
 
-export type EntryProps = Entry;
-export const EntryTitle = (entry: EntryProps) => {
-  if (!entry.name) {
-    return <FavIcon {...entry} />;
-  }
-  return (
-    <Flex align="center" gap="5px">
-      <FavIcon {...entry} />
-      {entry.name && <Text>{entry.name}</Text>}
-    </Flex>
-  );
-};
-
-export type EntryLinkProps = {
+export type EntryLinkProps = ButtonProps & {
   entry: Entry;
-  search: string;
+  search?: string;
 };
-export const EntryLink = ({entry, search}: EntryLinkProps) => {
+export const EntryLink = ({ entry, search = "", ...props }: EntryLinkProps) => {
+  const href = entry.url.replace("{{search}}", search);
 
   if (entry.name) {
     return (
       <Button
-        key={entry.id}
+        {...props}
         as={Link}
-        href={entry.url.replace("{{search}}", search)}
+        href={href}
+        leftIcon={<FavIcon {...entry} search={search} />}
+        title={href}
+        aria-label={href}
       >
-        <EntryTitle {...entry} />
+        <Text>{entry.name}</Text>
       </Button>
     );
   }
   return (
     <IconButton
-      aria-label={entry.url}
-      key={entry.id}
+      {...props}
       as={Link}
-      href={entry.url.replace("{{search}}", search)}
-      icon={<EntryTitle {...entry} />}
-      color={theme.colors.gray[500]}
+      href={href}
+      icon={<FavIcon {...entry} search={search} />}
+      title={href}
+      aria-label={href}
     />
   );
 };
