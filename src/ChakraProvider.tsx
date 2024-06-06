@@ -18,8 +18,6 @@ const SyncColorMode = () => {
 
   const { colorMode, setColorMode } = useColorMode();
 
-  console.log({ storedColorMode, colorMode })
-
   useEffect(() => {
     if (storedColorMode && storedColorMode !== colorMode) {
       setColorMode(storedColorMode);
@@ -34,8 +32,6 @@ export const ChakraProvider = ({ children, ...props }: ChakraProviderProps) => {
     <OriginalChakraProvider
       {...props}
       cssVarsRoot="#crx-root"
-      resetCSS={false}
-      disableGlobalStyle={true}
       theme={theme}
     >
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />

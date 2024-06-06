@@ -5,7 +5,6 @@ import {
   IconButton,
   Link,
   StackProps,
-  Tag,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { Entry, EntryLink } from "./Entry";
@@ -51,25 +50,26 @@ export const SortableItem = ({
   } = useSortable({ id });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition,
   };
 
+  const colorScheme = isSelected ? "blue" : "gray";
+
   return (
-    <Tag
+    <Button
       p="0"
       {...attributes}
       ref={setNodeRef}
       style={style}
       key={entry.id}
-      colorScheme={isSelected ? "blue" : "gray"}
       display="flex"
       alignItems="center"
       onClick={onClick}
+      colorScheme={colorScheme}
     >
       <IconButton
         as={Link}
-        variant="ghost"
         aria-label="Reorder"
         ref={setActivatorNodeRef}
         {...listeners}
@@ -80,9 +80,15 @@ export const SortableItem = ({
         }}
         minW="20px"
         icon={<Icon as={MdDragIndicator} />}
+        colorScheme={colorScheme}
       />
-      <EntryLink entry={entry} disabled onClick={onClick} variant="ghost" />
-    </Tag>
+      <EntryLink
+        entry={entry}
+        disabled
+        onClick={onClick}
+        colorScheme={colorScheme}
+      />
+    </Button>
   );
 };
 
@@ -154,22 +160,22 @@ export const EntriesManager = ({
   ...props
 }: EntriesManagerProps) => {
   return (
-      <HStack {...props} w="100%" justify="flex-end" align="flex-end">
-        <DraggableEntries
-          entries={entries}
-          onClick={onClick}
-          setEntries={setEntries}
-          selectedEntry={selectedEntry}
-        />
-        <Button
-          onClick={() => onClick(undefined)}
-          aria-label="New entry"
-          title="New entry"
-          leftIcon={<AddIcon />}
-          colorScheme={!selectedEntry ? "blue" : "gray"}
-        >
-          New entry
-        </Button>
-      </HStack>
+    <HStack {...props} w="100%" justify="flex-end" align="flex-end">
+      <DraggableEntries
+        entries={entries}
+        onClick={onClick}
+        setEntries={setEntries}
+        selectedEntry={selectedEntry}
+      />
+      <Button
+        onClick={() => onClick(undefined)}
+        aria-label="New entry"
+        title="New entry"
+        leftIcon={<AddIcon />}
+        colorScheme={!selectedEntry ? "blue" : "gray"}
+      >
+        New entry
+      </Button>
+    </HStack>
   );
 };

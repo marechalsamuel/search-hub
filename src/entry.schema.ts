@@ -1,7 +1,7 @@
 
 import * as z from "zod";
 
-export const entitySchema = z.object({
+export const entrySchema = z.object({
     id: z.string().uuid(),
     name: z.string(),
     url: z
