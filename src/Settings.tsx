@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   VStack,
   Box,
@@ -16,6 +16,10 @@ import useExtensionStorage from "./extenstion-storage.hook";
 import { EntryForm } from "./EntryForm";
 import { MdFullscreen } from "react-icons/md";
 import { FaMoon, FaSun } from "react-icons/fa";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { entrySchema } from "./entry.schema";
+import { v4 as uuid } from "uuid";
 
 const openOptionsPage = () => {
   if (
@@ -56,7 +60,31 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
   const handleColorToggle = () => {
     toggleColorMode();
     sendColorModeToStorage(colorMode === "light" ? "dark" : "light");
-  }
+  };
+
+  const defaultValues = useMemo(() => {
+    return selectedEntry
+      ? selectedEntry
+      : {
+          id: uuid(),
+          name: "",
+          url: "",
+        };
+  }, [selectedEntry]);
+
+  const form = useForm<Entry>({
+    resolver: zodResolver(entrySchema),
+    defaultValues,
+  });
+
+  useEffect(() => {
+    form.reset(defaultValues);
+  }, [defaultValues, form]);
+
+  const handleEntrySelection = (entry?: Entry) => {
+    setSelectedEntry(entry);
+    form.setFocus("url");
+  };
 
   return (
     <Box pos="absolute" top="10px" right="10px" bottom="10px" left="10px">
@@ -80,6 +108,7 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
           )}
         </HStack>
         <EntryForm
+          form={form}
           entries={entries}
           setEntries={setEntries}
           setSelectedEntry={setSelectedEntry}
@@ -89,7 +118,7 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
         <EntriesManager
           entries={entries}
           setEntries={setEntries}
-          onClick={setSelectedEntry}
+          onClick={handleEntrySelection}
           selectedEntry={selectedEntry}
           flex="1"
         />

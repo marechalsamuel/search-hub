@@ -1,4 +1,3 @@
-import { useEffect, useMemo } from "react";
 import { CheckIcon, DeleteIcon, InfoIcon } from "@chakra-ui/icons";
 import {
   Flex,
@@ -17,18 +16,23 @@ import {
 } from "@chakra-ui/react";
 import { FavIcon } from "./FavIcon";
 import { Entry } from "./Entry";
-import { useForm } from "react-hook-form";
-import { v4 as uuid } from "uuid";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { entitySchema } from "./entity.schema";
+import { UseFormReturn } from "react-hook-form";
 
 export type EntryFormProps = ContainerProps & {
   selectedEntry?: Entry;
   setSelectedEntry: (entry?: Entry) => void;
   entries: Entry[];
   setEntries: (entries?: Entry[]) => void;
+  form: UseFormReturn<Entry>;
 };
 export const EntryForm = ({
+  form: {
+    handleSubmit,
+    formState: { isValid },
+    register,
+    watch,
+    formState: { errors, dirtyFields },
+  },
   selectedEntry,
   setSelectedEntry,
   entries,
@@ -55,35 +59,7 @@ export const EntryForm = ({
     setEntries(entries);
   };
 
-  const defaultValues = useMemo(() => {
-    return selectedEntry
-      ? selectedEntry
-      : {
-          id: uuid(),
-          name: "",
-          url: "",
-        };
-  }, [selectedEntry]);
-
-  const {
-    handleSubmit,
-    formState: { isValid },
-    reset,
-    register,
-    watch,
-    formState: { errors, dirtyFields },
-    setFocus,
-  } = useForm<Entry>({
-    resolver: zodResolver(entitySchema),
-    defaultValues,
-  });
-
   const values = watch();
-
-  useEffect(() => {
-    setFocus("url");
-    reset(defaultValues);
-  }, [defaultValues, reset, setFocus]);
 
   return (
     <Box p="20px" {...props}>
@@ -96,19 +72,19 @@ export const EntryForm = ({
               <FavIcon {...values} />
             </Flex>
             <FormErrorMessage>{errors.url?.message}</FormErrorMessage>
-            <FormHelperText>
-              <Flex align="center" gap="5px">
-                <InfoIcon />
-                <Text>The URL has to be valid and contain</Text>
-                <Code>{`{{search}}`}</Code>
-              </Flex>
-            </FormHelperText>
+            {!errors.url && (
+              <FormHelperText>
+                <Flex align="center" gap="5px">
+                  <InfoIcon />
+                  <Text>The URL has to be valid and contain</Text>
+                  <Code>{`{{search}}`}</Code>
+                </Flex>
+              </FormHelperText>
+            )}
           </FormControl>
           <FormControl>
             <FormLabel>Name</FormLabel>
-            <Flex align="center" gap="5px">
-              <Input {...register("name")} />
-            </Flex>
+            <Input {...register("name")} />
             <FormHelperText>
               <Flex align="center" gap="5px">
                 <InfoIcon /> Leave name empty to display only website favicon.
