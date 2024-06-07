@@ -96,7 +96,7 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
             onClick={handleColorToggle}
           />
           <HStack>
-            <Img src="search-hub-96.png" />
+            <Img src="search-hub-24.png" />
             <Heading>Search Hub</Heading>
           </HStack>
           {!fullScreen && (

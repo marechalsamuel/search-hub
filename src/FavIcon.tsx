@@ -1,17 +1,6 @@
 import { Image } from "@chakra-ui/react";
 import { Entry } from "./Entry";
-
-const DEFAULT_SIZE = 24;
-
-const getFavicon = (url: string, size = DEFAULT_SIZE) => {
-  try {
-    const urlObj = new URL(url);
-    const domain = urlObj.hostname;
-    return `https://www.google.com/s2/favicons?domain=${domain}&sz=${size}`;
-  } catch (e) {
-    return;
-  }
-};
+import { FAVICON_DEFAULT_SIZE, getFavicon } from "./utils";
 
 export type FavIconProps = Entry & {
   url: string;
@@ -20,12 +9,11 @@ export type FavIconProps = Entry & {
   search?: string;
 };
 
-export const FavIcon = ({ url, name, size = DEFAULT_SIZE, search = "" }: FavIconProps) => {
-  const favicon = getFavicon(url);
+export const FavIcon = ({ url, icon, name, size = FAVICON_DEFAULT_SIZE, search = "" }: FavIconProps) => {
+  const favicon = icon || getFavicon(url);
   const href = url.replace("{{search}}", search);
   if (!favicon) return null;
   return (
-    <>
       <Image
         src={favicon}
         title={name || href}
@@ -33,6 +21,5 @@ export const FavIcon = ({ url, name, size = DEFAULT_SIZE, search = "" }: FavIcon
         width={`${size}px`}
         height={`${size}px`}
       />
-    </>
   );
 };

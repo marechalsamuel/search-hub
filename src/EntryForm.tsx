@@ -17,6 +17,7 @@ import {
 import { FavIcon } from "./FavIcon";
 import { Entry } from "./Entry";
 import { UseFormReturn } from "react-hook-form";
+import { getFavicon } from "./utils";
 
 export type EntryFormProps = ContainerProps & {
   selectedEntry?: Entry;
@@ -67,10 +68,7 @@ export const EntryForm = ({
         <VStack>
           <FormControl isInvalid={!!dirtyFields.url && !!errors.url}>
             <FormLabel>Url</FormLabel>
-            <Flex align="center" gap="5px">
-              <Input {...register("url")} />
-              <FavIcon {...values} />
-            </Flex>
+            <Input {...register("url")} />
             <FormErrorMessage>{errors.url?.message}</FormErrorMessage>
             {!errors.url && (
               <FormHelperText>
@@ -81,6 +79,18 @@ export const EntryForm = ({
                 </Flex>
               </FormHelperText>
             )}
+          </FormControl>
+          <FormControl>
+            <FormLabel>Icon</FormLabel>
+            <Flex align="center" gap="5px">
+              <Input {...register("icon")} placeholder={getFavicon(values.url)}/>
+              <FavIcon {...values} />
+            </Flex>
+            <FormHelperText>
+              <Flex align="center" gap="5px">
+                <InfoIcon /> Set any image url you want.
+              </Flex>
+            </FormHelperText>
           </FormControl>
           <FormControl>
             <FormLabel>Name</FormLabel>
