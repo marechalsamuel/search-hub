@@ -10,27 +10,14 @@
 ## Build
 - `pnpm build`
 
-## Adapt manually `manifest.json` for Firefox :
-- Add `browser_specific_settings.gecko.id`
-    ```json
-      "browser_specific_settings": {
-        "gecko": {
-          "id": "searchhub@searchhub.com"
-        }
-      },
-    ```
-- Remove `version_name`
-- Remove `web_accessible_resources.use_dynamic_url`
-
 ## Notes
 Made with
 - vitejs
 - crxjs
 - react
 - chakra-ui
-- zod
-- uuid
 
 ## TODO
+- preview
 - tuto browser permissions
-- choose if open in new tab
+- option : open in new tab
