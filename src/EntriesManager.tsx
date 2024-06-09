@@ -6,7 +6,7 @@ import {
   Link,
   StackProps,
 } from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
+import { AddIcon, ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { Entry, EntryLink } from "./Entry";
 import {
   DndContext,
@@ -27,19 +27,76 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { Dispatch, SetStateAction } from "react";
 import { MdDragIndicator } from "react-icons/md";
+export type ClickSortableItemProps = {
+  entry: Entry;
+  isSelected: boolean;
+  onClick: () => void;
+  onClickLeft?: () => void;
+  onClickRight?: () => void;
+};
+export const ClickSortableItem = ({
+  entry,
+  isSelected,
+  onClick,
+  onClickLeft,
+  onClickRight,
+}: ClickSortableItemProps) => {
+  const handleMoveLeftClick = () => {
+    onClickLeft?.();
+    onClick();
+  };
 
-export type SortableItemProps = {
+  const handleMoveRightClick = () => {
+    onClickRight?.();
+    onClick();
+  };
+
+  return (
+    <Button
+      p="0"
+      key={entry.id}
+      display="flex"
+      alignItems="center"
+      onClick={onClick}
+      isActive={isSelected}
+    >
+      {onClickLeft && (
+        <IconButton
+          variant="ghost"
+          as={Link}
+          aria-label="Move left"
+          onClick={handleMoveLeftClick}
+          minW="20px"
+          icon={<ChevronLeftIcon />}
+        />
+      )}
+      <EntryLink entry={entry} disabled onClick={onClick} />
+      {onClickRight && (
+        <IconButton
+          variant="ghost"
+          as={Link}
+          aria-label="Move right"
+          onClick={handleMoveRightClick}
+          minW="20px"
+          icon={<ChevronRightIcon />}
+        />
+      )}
+    </Button>
+  );
+};
+
+export type DragSortableItemProps = {
   id: string;
   entry: Entry;
   isSelected: boolean;
   onClick: () => void;
 };
-export const SortableItem = ({
+export const DragSortableItem = ({
   id,
   entry,
   isSelected,
   onClick,
-}: SortableItemProps) => {
+}: DragSortableItemProps) => {
   const {
     attributes,
     listeners,
@@ -54,8 +111,6 @@ export const SortableItem = ({
     transition,
   };
 
-  const colorScheme = isSelected ? "blue" : "gray";
-
   return (
     <Button
       p="0"
@@ -66,10 +121,10 @@ export const SortableItem = ({
       display="flex"
       alignItems="center"
       onClick={onClick}
-      colorScheme={colorScheme}
+      isActive={isSelected}
     >
       <IconButton
-        as={Link}
+        variant="ghost"
         aria-label="Reorder"
         ref={setActivatorNodeRef}
         {...listeners}
@@ -80,15 +135,69 @@ export const SortableItem = ({
         }}
         minW="20px"
         icon={<Icon as={MdDragIndicator} />}
-        colorScheme={colorScheme}
       />
       <EntryLink
         entry={entry}
         disabled
         onClick={onClick}
-        colorScheme={colorScheme}
       />
     </Button>
+  );
+};
+
+export type ClickEntriesProps = {
+  entries: Entry[];
+  setEntries: Dispatch<SetStateAction<Entry[] | undefined>>;
+  selectedEntry?: Entry;
+  onClick: (entry?: Entry) => void;
+};
+export const ClickEntries = ({
+  entries,
+  setEntries,
+  selectedEntry,
+  onClick,
+}: DraggableEntriesProps) => {
+  const moveLeft = (index: number) => {
+    if (index === 0) return entries;
+
+    const newIndex = Math.max(0, Math.min(entries.length - 1, index - 1));
+    setEntries(
+      entries.map((e, i) => {
+        if (i === index) return entries[newIndex];
+        if (i === newIndex) return entries[index];
+        return e;
+      })
+    );
+  };
+  const moveRight = (index: number) => {
+    if (index === entries.length - 1) return entries;
+
+    const newIndex = Math.max(0, Math.min(entries.length - 1, index + 1));
+    setEntries(
+      entries.map((e, i) => {
+        if (i === index) return entries[newIndex];
+        if (i === newIndex) return entries[index];
+        return e;
+      })
+    );
+  };
+  const getMoveLeftHandler = (index: number) =>
+    index === 0 ? undefined : () => moveLeft(index);
+  const getMoveRightHandler = (index: number) =>
+    index === entries.length - 1 ? undefined : () => moveRight(index);
+  return (
+    <>
+      {entries.map((entry, index) => (
+        <ClickSortableItem
+          onClickLeft={getMoveLeftHandler(index)}
+          onClickRight={getMoveRightHandler(index)}
+          onClick={() => onClick(entry)}
+          key={entry.id}
+          entry={entry}
+          isSelected={entry.id === selectedEntry?.id}
+        />
+      ))}
+    </>
   );
 };
 
@@ -132,7 +241,7 @@ export const DraggableEntries = ({
         strategy={horizontalListSortingStrategy}
       >
         {entries.map((entry) => (
-          <SortableItem
+          <DragSortableItem
             onClick={() => onClick(entry)}
             key={entry.id}
             id={entry.id}
@@ -150,6 +259,7 @@ export type EntriesManagerProps = Omit<StackProps, "onClick"> & {
   setEntries: Dispatch<SetStateAction<Entry[] | undefined>>;
   onClick: (entry?: Entry) => void;
   selectedEntry?: Entry;
+  forceDrag?: boolean;
 };
 
 export const EntriesManager = ({
@@ -157,22 +267,36 @@ export const EntriesManager = ({
   setEntries,
   onClick,
   selectedEntry,
+  forceDrag,
   ...props
 }: EntriesManagerProps) => {
+  const isFirefox = navigator.userAgent.toLowerCase().includes("firefox");
+  const mode = isFirefox && !forceDrag ? "click" : "drag";
+
   return (
     <HStack {...props} w="100%" justify="flex-end" align="flex-end">
-      <DraggableEntries
-        entries={entries}
-        onClick={onClick}
-        setEntries={setEntries}
-        selectedEntry={selectedEntry}
-      />
+      {mode === "click" && (
+        <ClickEntries
+          entries={entries}
+          onClick={onClick}
+          setEntries={setEntries}
+          selectedEntry={selectedEntry}
+        />
+      )}
+      {mode === "drag" && (
+        <DraggableEntries
+          entries={entries}
+          onClick={onClick}
+          setEntries={setEntries}
+          selectedEntry={selectedEntry}
+        />
+      )}
       <Button
         onClick={() => onClick(undefined)}
         aria-label="New entry"
         title="New entry"
         leftIcon={<AddIcon />}
-        colorScheme={!selectedEntry ? "blue" : "gray"}
+        isActive={!selectedEntry}
       >
         New entry
       </Button>

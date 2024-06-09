@@ -18,8 +18,8 @@ export const FavIcon = ({ url, icon, name, size = FAVICON_DEFAULT_SIZE, search =
         src={favicon}
         title={name || href}
         alt={name || href}
-        width={`${size}px`}
-        height={`${size}px`}
+        maxWidth={`${size}px`}
+        maxHeight={`${size}px`}
       />
   );
 };

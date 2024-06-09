@@ -28,12 +28,14 @@ const openOptionsPage = () => {
     chrome.runtime.openOptionsPage
   ) {
     chrome.runtime.openOptionsPage();
+    window.close();
   } else if (
     typeof browser !== "undefined" &&
     browser.runtime &&
     browser.runtime.openOptionsPage
   ) {
     browser.runtime.openOptionsPage();
+    window.close();
   } else {
     console.error("Unsupported browser for openOptionsPage.");
   }
@@ -68,6 +70,7 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
       : {
           id: uuid(),
           name: "",
+          icon: "",
           url: "",
         };
   }, [selectedEntry]);
@@ -103,7 +106,7 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
             <IconButton
               icon={<MdFullscreen />}
               aria-label="Fullscreen"
-              onClick={() => openOptionsPage()}
+              onClick={openOptionsPage}
             />
           )}
         </HStack>
@@ -116,6 +119,7 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
           w="100%"
         />
         <EntriesManager
+          forceDrag={fullScreen}
           entries={entries}
           setEntries={setEntries}
           onClick={handleEntrySelection}
