@@ -10,3 +10,5 @@ export const entrySchema = z.object({
         .url()
         .regex(/^.*\{\{search\}\}.*$/, "Url must contain `{{search}}`"),
 });
+
+export type Entry = z.infer<typeof entrySchema>;

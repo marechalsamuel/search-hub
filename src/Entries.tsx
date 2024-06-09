@@ -1,7 +1,8 @@
 import { HStack } from "@chakra-ui/react";
-import { Entry, EntryLink } from "./Entry";
+import { EntryLink } from "./EntryLink";
 import "./entries.css";
 import useExtensionStorage from "./extenstion-storage.hook";
+import { Entry } from "./entry.entity";
 
 export const Entries = () => {
   const { storedData: entries } = useExtensionStorage<Entry[]>("entries");

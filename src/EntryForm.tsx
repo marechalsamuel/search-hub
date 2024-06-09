@@ -16,9 +16,9 @@ import {
   CardBody,
 } from "@chakra-ui/react";
 import { FavIcon } from "./FavIcon";
-import { Entry } from "./Entry";
 import { UseFormReturn } from "react-hook-form";
 import { getFavicon } from "./utils";
+import { Entry } from "./entry.entity";
 
 export type EntryFormProps = ContainerProps & {
   selectedEntry?: Entry;

@@ -7,7 +7,7 @@ import {
   StackProps,
 } from "@chakra-ui/react";
 import { AddIcon, ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { Entry, EntryLink } from "./Entry";
+import { EntryLink } from "./EntryLink";
 import {
   DndContext,
   closestCenter,
@@ -27,6 +27,8 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { Dispatch, SetStateAction } from "react";
 import { MdDragIndicator } from "react-icons/md";
+import { Entry } from "./entry.entity";
+
 export type ClickSortableItemProps = {
   entry: Entry;
   isSelected: boolean;
@@ -52,17 +54,16 @@ export const ClickSortableItem = ({
   };
 
   return (
-    <Button
+    <HStack
       p="0"
+      gap="1px"
       key={entry.id}
       display="flex"
       alignItems="center"
       onClick={onClick}
-      isActive={isSelected}
     >
       {onClickLeft && (
         <IconButton
-          variant="ghost"
           as={Link}
           aria-label="Move left"
           onClick={handleMoveLeftClick}
@@ -70,10 +71,14 @@ export const ClickSortableItem = ({
           icon={<ChevronLeftIcon />}
         />
       )}
-      <EntryLink entry={entry} disabled onClick={onClick} />
+      <EntryLink
+        entry={entry}
+        disabled
+        onClick={onClick}
+        isActive={isSelected}
+      />
       {onClickRight && (
         <IconButton
-          variant="ghost"
           as={Link}
           aria-label="Move right"
           onClick={handleMoveRightClick}
@@ -81,7 +86,7 @@ export const ClickSortableItem = ({
           icon={<ChevronRightIcon />}
         />
       )}
-    </Button>
+    </HStack>
   );
 };
 
@@ -112,8 +117,9 @@ export const DragSortableItem = ({
   };
 
   return (
-    <Button
+    <HStack
       p="0"
+      gap="1px"
       {...attributes}
       ref={setNodeRef}
       style={style}
@@ -121,10 +127,8 @@ export const DragSortableItem = ({
       display="flex"
       alignItems="center"
       onClick={onClick}
-      isActive={isSelected}
     >
       <IconButton
-        variant="ghost"
         aria-label="Reorder"
         ref={setActivatorNodeRef}
         {...listeners}
@@ -140,8 +144,9 @@ export const DragSortableItem = ({
         entry={entry}
         disabled
         onClick={onClick}
+        isActive={isSelected}
       />
-    </Button>
+    </HStack>
   );
 };
 

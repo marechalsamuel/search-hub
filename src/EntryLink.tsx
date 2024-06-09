@@ -1,25 +1,25 @@
-import * as z from "zod";
 import { FavIcon } from "./FavIcon";
-import { entrySchema } from "./entry.schema";
 import { HStack, Link, LinkProps, Text } from "@chakra-ui/react";
+import { Entry } from "./entry.entity";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
-export type Entry = z.infer<typeof entrySchema>;
 
 export type EntryLinkProps = LinkProps & {
   disabled?: boolean;
   entry: Entry;
   search?: string;
+  isActive?: boolean;
 };
 export const EntryLink = ({
   entry,
   search = "",
   disabled,
+  isActive,
   ...props
 }: EntryLinkProps) => {
   const href = entry.url.replace("{{search}}", search);
 
-  const activeProps = {
+  const enabledProps = {
     href,
     title: href,
     "aria-label": href,
@@ -27,11 +27,12 @@ export const EntryLink = ({
 
   const linkProps = {
     ...props,
-    ...(!disabled && activeProps),
+    colorScheme: isActive ? "blue" : undefined,
+    ...(!disabled && enabledProps),
   };
 
   return (
-    <Link {...linkProps} variant="button">
+    <Link {...linkProps} variant="buttonSolid">
       <HStack>
         <FavIcon {...entry} search={search} />
         {entry.name && <Text>{entry.name}</Text>}

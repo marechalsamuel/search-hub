@@ -10,7 +10,6 @@ import {
   ColorMode,
 } from "@chakra-ui/react";
 import { useLocalStorage } from "react-use";
-import { Entry } from "./Entry";
 import { EntriesManager } from "./EntriesManager";
 import useExtensionStorage from "./extenstion-storage.hook";
 import { EntryForm } from "./EntryForm";
@@ -18,7 +17,7 @@ import { MdFullscreen } from "react-icons/md";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { entrySchema } from "./entry.schema";
+import { Entry, entrySchema } from "./entry.entity";
 import { v4 as uuid } from "uuid";
 
 const openOptionsPage = () => {
