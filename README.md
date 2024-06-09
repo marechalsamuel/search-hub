@@ -32,6 +32,5 @@ Made with
 - uuid
 
 ## TODO
-- make dnd reorder work in FF
 - tuto browser permissions
 - choose if open in new tab
