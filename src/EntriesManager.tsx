@@ -301,7 +301,7 @@ export const EntriesManager = ({
         aria-label="New entry"
         title="New entry"
         leftIcon={<AddIcon />}
-        isActive={!selectedEntry}
+        colorScheme={!selectedEntry ? "blue" : undefined}
       >
         New entry
       </Button>
