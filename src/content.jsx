@@ -14,7 +14,7 @@ ReactDOM.createRoot(root).render(
     <ChakraProvider
       cssVarsRoot={`#${rootId}`}
       disableGlobalStyle={true}
-      resetCSS={true}
+      resetCSS={false}
     >
       <Entries />
     </ChakraProvider>
