@@ -8,6 +8,7 @@ import {
   HStack,
   useColorMode,
   ColorMode,
+  Code,
 } from "@chakra-ui/react";
 import { useLocalStorage } from "react-use";
 import { EntriesManager } from "./EntriesManager";
@@ -97,9 +98,10 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
             aria-label="Fullscreen"
             onClick={handleColorToggle}
           />
-          <HStack>
-            <Img src="search-hub-24.png" />
+          <HStack alignItems="flex-end">
+            <Img src="search-hub-32.png" />
             <Heading>Search Hub</Heading>
+            <Code>{import.meta.env.PACKAGE_VERSION}</Code>
           </HStack>
           {!fullScreen && (
             <IconButton
