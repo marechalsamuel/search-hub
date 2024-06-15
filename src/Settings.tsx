@@ -78,6 +78,7 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
   const form = useForm<Entry>({
     resolver: zodResolver(entrySchema),
     defaultValues,
+    mode: "all",
   });
 
   useEffect(() => {
@@ -128,6 +129,6 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
           flex="1"
         />
       </VStack>
-    </Box>
+      </Box>
   );
 };

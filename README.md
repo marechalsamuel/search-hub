@@ -18,6 +18,6 @@ Made with
 - chakra-ui
 
 ## TODO
-- preview
 - tuto browser permissions
+- scroll bar
 - option : open in new tab

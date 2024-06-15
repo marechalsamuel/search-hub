@@ -1,7 +1,7 @@
 {
   "name": "search-hub",
   "private": true,
-  "version": "1.0.4",
+  "version": "1.0.5",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -42,6 +42,7 @@
     "@chakra-ui/cli": "^2.4.1",
     "@chakra-ui/styled-system": "^2.9.2",
     "@crxjs/vite-plugin": "2.0.0-beta.23",
+    "@hookform/devtools": "^4.3.1",
     "@types/archiver": "^6.0.2",
     "@types/filesystem": "^0.0.36",
     "@types/react": "^18.2.66",

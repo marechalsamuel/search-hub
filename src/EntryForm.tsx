@@ -19,6 +19,7 @@ import { FavIcon } from "./FavIcon";
 import { UseFormReturn } from "react-hook-form";
 import { getFavicon } from "./utils";
 import { Entry } from "./entry.entity";
+import { EntryLink } from "./EntryLink";
 
 export type EntryFormProps = ContainerProps & {
   selectedEntry?: Entry;
@@ -30,10 +31,9 @@ export type EntryFormProps = ContainerProps & {
 export const EntryForm = ({
   form: {
     handleSubmit,
-    formState: { isValid },
+    formState: { isValid, errors, dirtyFields },
     register,
     watch,
-    formState: { errors, dirtyFields },
   },
   selectedEntry,
   setSelectedEntry,
@@ -85,8 +85,76 @@ export const EntryForm = ({
               </FormHelperText>
             )}
           </FormControl>
-          {!selectedEntry && (
-            <HStack w="100%" justify="flex-end">
+          {values.url && !errors.url && (
+            <Card w="100%">
+              <CardBody>
+                <FormControl>
+                  <HStack>
+                    <FormLabel>Preview</FormLabel>
+                    <EntryLink entry={values} disabled isActive={false} />
+                  </HStack>
+                </FormControl>
+              </CardBody>
+            </Card>
+          )}
+          <Card w="100%">
+            <CardBody>
+              <VStack>
+                <FormControl isDisabled={!selectedEntry}>
+                  <HStack>
+                    <FormLabel>Icon</FormLabel>
+                    <Input
+                      {...register("icon")}
+                      placeholder={getFavicon(values.url)}
+                      title={
+                        selectedEntry
+                          ? undefined
+                          : "First enter url and create the entry to set custom icon."
+                      }
+                    />
+                    <FavIcon {...values} />
+                  </HStack>
+                  <FormHelperText>
+                    <HStack>
+                      <InfoIcon />
+                      <Text>Set any image url you want.</Text>
+                    </HStack>
+                  </FormHelperText>
+                </FormControl>
+                <FormControl isDisabled={!selectedEntry}>
+                  <HStack>
+                    <FormLabel>Name</FormLabel>
+                    <Input
+                      {...register("name")}
+                      title={
+                        selectedEntry
+                          ? undefined
+                          : "First enter url and create the entry to set custom name."
+                      }
+                    />
+                  </HStack>
+                  <FormHelperText>
+                    <HStack>
+                      <InfoIcon />
+                      <Text>
+                        Leave name empty to display only website favicon.
+                      </Text>
+                    </HStack>
+                  </FormHelperText>
+                </FormControl>
+              </VStack>
+            </CardBody>
+          </Card>
+          <HStack w="100%" justify="flex-end">
+            {!selectedEntry && (
+                    <HStack>
+                      <InfoIcon />
+                      <Text>
+                        First enter url and create the entry to set custom properties.
+                      </Text>
+                    </HStack>
+            )}
+            {!selectedEntry && (
               <Button
                 type="submit"
                 leftIcon={<CheckIcon />}
@@ -95,65 +163,27 @@ export const EntryForm = ({
               >
                 Create
               </Button>
-            </HStack>
-          )}
-          {!!selectedEntry && (
-            <>
-              <Card w="100%">
-                <CardBody>
-                  <VStack>
-                    <FormControl>
-                      <HStack>
-                        <FormLabel>Icon</FormLabel>
-                        <Input
-                          {...register("icon")}
-                          placeholder={getFavicon(values.url)}
-                        />
-                        <FavIcon {...values} />
-                      </HStack>
-                      <FormHelperText>
-                        <HStack>
-                          <InfoIcon />
-                          <Text>Set any image url you want.</Text>
-                        </HStack>
-                      </FormHelperText>
-                    </FormControl>
-                    <FormControl>
-                      <HStack>
-                        <FormLabel>Name</FormLabel>
-                        <Input {...register("name")} />
-                      </HStack>
-                      <FormHelperText>
-                        <HStack>
-                          <InfoIcon />
-                          <Text>
-                            Leave name empty to display only website favicon.
-                          </Text>
-                        </HStack>
-                      </FormHelperText>
-                    </FormControl>
-                  </VStack>
-                </CardBody>
-              </Card>
-              <HStack w="100%" justify="flex-end">
-                <Button
-                  onClick={() => handleEntryDelete(selectedEntry)}
-                  leftIcon={<DeleteIcon />}
-                  colorScheme="red"
-                >
-                  Delete
-                </Button>
-                <Button
-                  type="submit"
-                  leftIcon={<CheckIcon />}
-                  disabled={!isValid}
-                  colorScheme="blue"
-                >
-                  Update
-                </Button>
-              </HStack>
-            </>
-          )}
+            )}
+            {!!selectedEntry && (
+              <Button
+                onClick={() => handleEntryDelete(selectedEntry)}
+                leftIcon={<DeleteIcon />}
+                colorScheme="red"
+              >
+                Delete
+              </Button>
+            )}
+            {!!selectedEntry && (
+              <Button
+                type="submit"
+                leftIcon={<CheckIcon />}
+                disabled={!isValid}
+                colorScheme="blue"
+              >
+                Update
+              </Button>
+            )}
+          </HStack>
         </VStack>
       </form>
     </Box>
