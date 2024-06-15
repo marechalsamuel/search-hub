@@ -1,9 +1,7 @@
 import { CheckIcon, DeleteIcon, InfoIcon } from "@chakra-ui/icons";
 import {
-  Code,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   FormLabel,
   Input,
   VStack,
@@ -14,8 +12,8 @@ import {
   HStack,
   Card,
   CardBody,
+  Spacer,
 } from "@chakra-ui/react";
-import { FavIcon } from "./FavIcon";
 import { UseFormReturn } from "react-hook-form";
 import { getFavicon } from "./utils";
 import { Entry } from "./entry.entity";
@@ -64,68 +62,61 @@ export const EntryForm = ({
   const values = watch();
 
   return (
-    <Box p="20px" {...props}>
+    <Box {...props}>
       <form onSubmit={handleSubmit(handleEntryFormSubmit)}>
         <VStack>
           <FormControl isInvalid={!!dirtyFields.url && !!errors.url}>
             <HStack>
-              <FormLabel>Url</FormLabel>
-              <Input {...register("url")} />
-            </HStack>
-            <FormErrorMessage>{errors.url?.message}</FormErrorMessage>
-            {!errors.url && (
-              <FormHelperText>
+              <FormLabel title="The URL has to be valid and contain `{{search}}`.">
                 <HStack>
                   <InfoIcon />
-                  <Text>
-                    The URL has to be valid and contain
-                    <Code>{`{{search}}`}</Code>
-                  </Text>
+                  <Text>Url</Text>
                 </HStack>
-              </FormHelperText>
-            )}
+              </FormLabel>
+              <Input
+                {...register("url")}
+                placeholder={"https://www.example.com/search={{search}}"}
+              />
+            </HStack>
+            <FormErrorMessage>{errors.url?.message}</FormErrorMessage>
           </FormControl>
-          {values.url && !errors.url && (
-            <Card w="100%">
-              <CardBody>
-                <FormControl>
-                  <HStack>
-                    <FormLabel>Preview</FormLabel>
-                    <EntryLink entry={values} disabled isActive={false} />
-                  </HStack>
-                </FormControl>
-              </CardBody>
-            </Card>
-          )}
           <Card w="100%">
             <CardBody>
               <VStack>
                 <FormControl isDisabled={!selectedEntry}>
                   <HStack>
-                    <FormLabel>Icon</FormLabel>
+                    <FormLabel>
+                      <HStack title="Set any image url you want.">
+                        <InfoIcon />
+                        <Text>Icon</Text>
+                      </HStack>
+                    </FormLabel>
                     <Input
                       {...register("icon")}
-                      placeholder={getFavicon(values.url)}
+                      placeholder={
+                        getFavicon(values.url) ||
+                        "https://www.example.com/favicon.ico"
+                      }
                       title={
                         selectedEntry
                           ? undefined
                           : "First enter url and create the entry to set custom icon."
                       }
                     />
-                    <FavIcon {...values} />
                   </HStack>
-                  <FormHelperText>
-                    <HStack>
-                      <InfoIcon />
-                      <Text>Set any image url you want.</Text>
-                    </HStack>
-                  </FormHelperText>
                 </FormControl>
                 <FormControl isDisabled={!selectedEntry}>
                   <HStack>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>
+                      <HStack title="Leave name empty to display only website favicon.">
+                        <InfoIcon />
+                        <Text>Name</Text>
+                        <Text>Icon</Text>
+                      </HStack>
+                    </FormLabel>
                     <Input
                       {...register("name")}
+                      placeholder="Ex."
                       title={
                         selectedEntry
                           ? undefined
@@ -133,26 +124,27 @@ export const EntryForm = ({
                       }
                     />
                   </HStack>
-                  <FormHelperText>
-                    <HStack>
-                      <InfoIcon />
-                      <Text>
-                        Leave name empty to display only website favicon.
-                      </Text>
-                    </HStack>
-                  </FormHelperText>
                 </FormControl>
               </VStack>
             </CardBody>
           </Card>
           <HStack w="100%" justify="flex-end">
+            {values.url && !errors.url && (
+              <>
+                <HStack>
+                  <FormLabel>Preview</FormLabel>
+                  <EntryLink entry={values} disabled isActive={false} />
+                </HStack>
+                <Spacer />
+              </>
+            )}
             {!selectedEntry && (
-                    <HStack>
-                      <InfoIcon />
-                      <Text>
-                        First enter url and create the entry to set custom properties.
-                      </Text>
-                    </HStack>
+              <HStack>
+                <InfoIcon />
+                <Text>
+                  First enter url and create the entry to set custom properties.
+                </Text>
+              </HStack>
             )}
             {!selectedEntry && (
               <Button

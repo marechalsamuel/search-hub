@@ -18,6 +18,7 @@ Made with
 - chakra-ui
 
 ## TODO
+- presets
 - tuto browser permissions
 - scroll bar
 - option : open in new tab

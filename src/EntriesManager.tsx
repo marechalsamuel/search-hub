@@ -5,6 +5,7 @@ import {
   IconButton,
   Link,
   StackProps,
+  Wrap,
 } from "@chakra-ui/react";
 import { AddIcon, ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { EntryLink } from "./EntryLink";
@@ -22,7 +23,6 @@ import {
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
-  horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Dispatch, SetStateAction } from "react";
@@ -241,10 +241,7 @@ export const DraggableEntries = ({
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
     >
-      <SortableContext
-        items={entries.map((e) => e.id)}
-        strategy={horizontalListSortingStrategy}
-      >
+      <SortableContext items={entries.map((e) => e.id)}>
         {entries.map((entry) => (
           <DragSortableItem
             onClick={() => onClick(entry)}
@@ -279,7 +276,17 @@ export const EntriesManager = ({
   const mode = isFirefox && !forceDrag ? "click" : "drag";
 
   return (
-    <HStack {...props} w="100%" justify="flex-end" align="flex-end">
+    <Wrap {...props} w="100%">
+      <Button
+        flexShrink="0"
+        onClick={() => onClick(undefined)}
+        aria-label="New entry"
+        title="New entry"
+        leftIcon={<AddIcon />}
+        colorScheme={!selectedEntry ? "blue" : undefined}
+      >
+        New entry
+      </Button>
       {mode === "click" && (
         <ClickEntries
           entries={entries}
@@ -296,15 +303,6 @@ export const EntriesManager = ({
           selectedEntry={selectedEntry}
         />
       )}
-      <Button
-        onClick={() => onClick(undefined)}
-        aria-label="New entry"
-        title="New entry"
-        leftIcon={<AddIcon />}
-        colorScheme={!selectedEntry ? "blue" : undefined}
-      >
-        New entry
-      </Button>
-    </HStack>
+    </Wrap>
   );
 };

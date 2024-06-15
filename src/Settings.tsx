@@ -92,7 +92,7 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
 
   return (
     <Box pos="absolute" top="10px" right="10px" bottom="10px" left="10px">
-      <VStack h="100%" w="100%">
+      <VStack h="100%" w="100%" justify="space-between">
         <HStack justify="space-between" w="100%" align="flex-start">
           <IconButton
             icon={colorMode === "light" ? <FaMoon /> : <FaSun />}
@@ -126,7 +126,7 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
           setEntries={setEntries}
           onClick={handleEntrySelection}
           selectedEntry={selectedEntry}
-          flex="1"
+          overflowX="auto"
         />
       </VStack>
       </Box>
