@@ -1,8 +1,6 @@
 import { FavIcon } from "./FavIcon";
 import { HStack, Link, LinkProps, Text } from "@chakra-ui/react";
 import { Entry } from "./entry.entity";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-
 
 export type EntryLinkProps = LinkProps & {
   disabled?: boolean;
@@ -32,7 +30,7 @@ export const EntryLink = ({
   };
 
   return (
-    <Link {...linkProps} variant="buttonSolid">
+    <Link {...linkProps} variant="buttonSolid" userSelect={"none"}>
       <HStack>
         <FavIcon {...entry} search={search} />
         {entry.name && <Text>{entry.name}</Text>}

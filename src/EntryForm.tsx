@@ -111,7 +111,6 @@ export const EntryForm = ({
                       <HStack title="Leave name empty to display only website favicon.">
                         <InfoIcon />
                         <Text>Name</Text>
-                        <Text>Icon</Text>
                       </HStack>
                     </FormLabel>
                     <Input
@@ -142,7 +141,7 @@ export const EntryForm = ({
               <HStack>
                 <InfoIcon />
                 <Text>
-                  First enter url and create the entry to set custom properties.
+                  First enter a url and click "Create" to create the entry to set icon and name.
                 </Text>
               </HStack>
             )}
