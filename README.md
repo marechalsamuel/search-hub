@@ -18,7 +18,7 @@ Made with
 - chakra-ui
 
 ## TODO
-- presets
+- fix colorMode
+- valid delete
 - tuto browser permissions
-- scroll bar
 - option : open in new tab

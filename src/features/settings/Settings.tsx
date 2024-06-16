@@ -17,6 +17,7 @@ import useExtensionStorage from "../storage/extenstionStorage.hook";
 import { Entry, entrySchema } from "../entry/entry.entity";
 import { LdsColorModeSwitch } from "../chakra/ldsColorMode/LdsColorModeSwitch";
 import { EntryForm } from "../entry/EntryForm";
+import { PresetSelect } from "../presets/PresetSelect";
 
 const openOptionsPage = () => {
   if (
@@ -100,6 +101,7 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
             <Heading>Search Hub</Heading>
             <Code>{import.meta.env.PACKAGE_VERSION}</Code>
           </HStack>
+          <PresetSelect onClick={handleEntryFormSubmit} />
           {!fullScreen && (
             <IconButton
               icon={<MdFullscreen />}
