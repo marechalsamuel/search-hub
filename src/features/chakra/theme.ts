@@ -2,11 +2,11 @@ import { extendTheme } from '@chakra-ui/react'
 import { linkTheme } from "./Link.theme";
 import { storage } from '../storage/storage';
 
-const initialColorMode = await storage?.local.get("colorMode").then((result) => result["colorMode"]) || 'system';
+const { colorMode } = await storage?.local.get("colorMode") || {};
 
 const theme = extendTheme({
   config: {
-    initialColorMode,
+    initialColorMode: colorMode || 'system',
     useSystemColorMode: false,
   },
   components: {
