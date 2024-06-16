@@ -1,11 +1,11 @@
 import { useColorModePreference } from "@chakra-ui/react";
 import { useColorMode } from "@chakra-ui/system";
-import { useState } from "react";
+import useExtensionStorage from "../../storage/extenstionStorage.hook";
 
 export type LdsColorMode = "light" | "dark" | "system";
 
 export const useLdsColorMode = () => {
-  const [state, setState] = useState<LdsColorMode>("system");
+  const { storedData, sendToStorage } = useExtensionStorage<LdsColorMode>("colorMode", "system");
   const { setColorMode: setChakraColorMode } = useColorMode();
   const systemColorMode = useColorModePreference();
 
@@ -15,8 +15,8 @@ export const useLdsColorMode = () => {
     } else {
       setChakraColorMode(value);
     }
-    setState(value);
+    sendToStorage(value);
   };
 
-  return { ldsColorMode: state, setLdsColorMode: handleLdsColorModeChange };
+  return { ldsColorMode: storedData, setLdsColorMode: handleLdsColorModeChange };
 };
