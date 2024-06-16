@@ -8,16 +8,15 @@ import {
   HStack,
   Code,
 } from "@chakra-ui/react";
-import { useLocalStorage } from "react-use";
 import { EntriesManager } from "./EntriesManager";
-import useExtensionStorage from "./extenstion-storage.hook";
-import { EntryForm } from "./EntryForm";
 import { MdFullscreen } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Entry, entrySchema } from "./entry.entity";
 import { v4 as uuid } from "uuid";
-import { ColorModeSelect } from "./ColorModeSelect";
+import useExtensionStorage from "../storage/extenstionStorage.hook";
+import { Entry, entrySchema } from "../entry/entry.entity";
+import { LdsColorModeSwitch } from "../chakra/ldsColorMode/LdsColorModeSwitch";
+import { EntryForm } from "../entry/EntryForm";
 
 const openOptionsPage = () => {
   if (
@@ -42,17 +41,7 @@ export type SettingsProps = {
   fullScreen?: boolean;
 };
 export const Settings = ({ fullScreen }: SettingsProps) => {
-  const { storedData, sendToStorage } = useExtensionStorage<Entry[]>("entries");
-  const [entries = [], setEntries] = useLocalStorage<Entry[]>("entries");
-  useEffect(() => {
-    if (entries !== storedData) {
-      try {
-        sendToStorage(entries);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }, [entries, storedData, sendToStorage]);
+  const { storedData: entries = [], sendToStorage: setEntries } = useExtensionStorage<Entry[]>("entries", []);
   const [selectedEntry, setSelectedEntry] = useState<Entry | undefined>();
 
   const defaultValues = useMemo(() => {
@@ -80,12 +69,32 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
     setSelectedEntry(entry);
     form.setFocus("url");
   };
+    
+  const handleEntryFormSubmit = (entry: Entry) => {
+    setSelectedEntry(entry);
+    const index = entries.findIndex((e) => e.id === entry.id);
+    if (index === -1) {
+      setEntries([...entries, entry]);
+      return;
+    }
+    entries[index] = entry;
+    setEntries(entries);
+  };
+
+  const handleEntryDelete = (entry: Entry) => {
+    if (!entry.id) return;
+    setSelectedEntry(undefined);
+    const index = entries.findIndex((e) => e.id === entry.id);
+    if (index === -1) return;
+    entries.splice(index, 1);
+    setEntries(entries);
+  };
 
   return (
     <Box pos="absolute" top="10px" right="10px" bottom="10px" left="10px">
       <VStack h="100%" w="100%" justify="space-between">
         <HStack justify="space-between" w="100%" align="flex-start">
-          <ColorModeSelect />
+          <LdsColorModeSwitch />
           <HStack alignItems="flex-end">
             <Img src="search-hub-32.png" />
             <Heading>Search Hub</Heading>
@@ -101,14 +110,13 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
         </HStack>
         <EntryForm
           form={form}
-          entries={entries}
-          setEntries={setEntries}
-          setSelectedEntry={setSelectedEntry}
+          onSubmit={handleEntryFormSubmit}
+          onDelete={handleEntryDelete}
           selectedEntry={selectedEntry}
           w="100%"
         />
         <EntriesManager
-          forceDrag={fullScreen}
+          canDrag={fullScreen}
           entries={entries}
           setEntries={setEntries}
           onClick={handleEntrySelection}
@@ -116,6 +124,6 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
           overflowX="auto"
         />
       </VStack>
-      </Box>
+    </Box>
   );
 };

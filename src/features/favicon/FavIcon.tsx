@@ -1,6 +1,6 @@
 import { Image } from "@chakra-ui/react";
-import { FAVICON_DEFAULT_SIZE, getFavicon } from "./utils";
-import { Entry } from "./entry.entity";
+import { FAVICON_DEFAULT_SIZE, getFavicon } from "./favicon.helper";
+import { Entry } from "../entry/entry.entity";
 
 export type FavIconProps = Entry & {
   url: string;

@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { Entries } from "./Entries";
+import { Entries } from "../../features/entry/Entries";
 import "./content.css";
-import { ChakraProvider } from "./ChakraProvider";
+import { ChakraProvider } from "../../features/chakra/ChakraProvider";
 
 const root = document.createElement("div");
 const rootId = "crx-root";

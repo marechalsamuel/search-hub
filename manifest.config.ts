@@ -31,7 +31,7 @@ export default defineManifest(async () => ({
     permissions: ["storage"],
     content_scripts: [
       {
-        "js": ["src/content.jsx"],
+        "js": ["src/apps/content/content.jsx"],
         "matches": ["https://www.google.com/search*"]
       }
     ],

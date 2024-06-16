@@ -8,7 +8,6 @@ import {
   Wrap,
 } from "@chakra-ui/react";
 import { AddIcon, ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { EntryLink } from "./EntryLink";
 import {
   DndContext,
   closestCenter,
@@ -25,9 +24,9 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Dispatch, SetStateAction } from "react";
 import { MdDragIndicator } from "react-icons/md";
-import { Entry } from "./entry.entity";
+import { EntryLink } from "../entry/EntryLink";
+import { Entry } from "../entry/entry.entity";
 
 export type ClickSortableItemProps = {
   entry: Entry;
@@ -152,7 +151,7 @@ export const DragSortableItem = ({
 
 export type ClickEntriesProps = {
   entries: Entry[];
-  setEntries: Dispatch<SetStateAction<Entry[] | undefined>>;
+  setEntries: (entries: Entry[]) => void;
   selectedEntry?: Entry;
   onClick: (entry?: Entry) => void;
 };
@@ -208,7 +207,7 @@ export const ClickEntries = ({
 
 export type DraggableEntriesProps = {
   entries: Entry[];
-  setEntries: Dispatch<SetStateAction<Entry[] | undefined>>;
+  setEntries: (entries: Entry[]) => void;
   selectedEntry?: Entry;
   onClick: (entry?: Entry) => void;
 };
@@ -258,10 +257,10 @@ export const DraggableEntries = ({
 
 export type EntriesManagerProps = Omit<StackProps, "onClick"> & {
   entries: Entry[];
-  setEntries: Dispatch<SetStateAction<Entry[] | undefined>>;
+  setEntries: (entries: Entry[]) => void;
   onClick: (entry?: Entry) => void;
   selectedEntry?: Entry;
-  forceDrag?: boolean;
+  canDrag?: boolean;
 };
 
 export const EntriesManager = ({
@@ -269,11 +268,11 @@ export const EntriesManager = ({
   setEntries,
   onClick,
   selectedEntry,
-  forceDrag,
+  canDrag,
   ...props
 }: EntriesManagerProps) => {
   const isFirefox = navigator.userAgent.toLowerCase().includes("firefox");
-  const mode = isFirefox && !forceDrag ? "click" : "drag";
+  const mode = isFirefox && !canDrag ? "click" : "drag";
 
   return (
     <Wrap {...props} w="100%">

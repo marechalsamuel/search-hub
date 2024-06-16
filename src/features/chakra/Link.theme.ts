@@ -127,7 +127,7 @@ const variantButtonSolid = defineStyle((props) => {
     justifyContent: "center",
     fontSize: "16px",
     height: "40px",
-    padding: "0 1em",
+    padding: "0 0.5em",
     lineHeight: "1.2",
     borderRadius: "md",
     fontWeight: "semibold",

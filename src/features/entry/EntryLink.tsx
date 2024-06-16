@@ -1,4 +1,4 @@
-import { FavIcon } from "./FavIcon";
+import { FavIcon } from "../favicon/FavIcon";
 import { HStack, Link, LinkProps, Text } from "@chakra-ui/react";
 import { Entry } from "./entry.entity";
 

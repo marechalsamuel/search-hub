@@ -1,10 +1,10 @@
 import { Wrap } from "@chakra-ui/react";
 import { EntryLink } from "./EntryLink";
-import useExtensionStorage from "./extenstion-storage.hook";
+import useExtensionStorage from "../storage/extenstionStorage.hook";
 import { Entry } from "./entry.entity";
 
 export const Entries = () => {
-  const { storedData: entries } = useExtensionStorage<Entry[]>("entries");
+  const { storedData: entries } = useExtensionStorage<Entry[]>("entries", []);
   const search =
     (
       document.body.querySelector(

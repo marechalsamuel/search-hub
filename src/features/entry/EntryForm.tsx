@@ -8,23 +8,22 @@ import {
   Text,
   Button,
   Box,
-  ContainerProps,
+  BoxProps,
   HStack,
   Card,
   CardBody,
   Spacer,
 } from "@chakra-ui/react";
 import { UseFormReturn } from "react-hook-form";
-import { getFavicon } from "./utils";
+import { getFavicon } from "../favicon/favicon.helper";
 import { Entry } from "./entry.entity";
 import { EntryLink } from "./EntryLink";
 
-export type EntryFormProps = ContainerProps & {
+export type EntryFormProps = Omit<BoxProps, 'onSubmit'> & {
   selectedEntry?: Entry;
-  setSelectedEntry: (entry?: Entry) => void;
-  entries: Entry[];
-  setEntries: (entries?: Entry[]) => void;
   form: UseFormReturn<Entry>;
+  onSubmit: (entry: Entry) => void;
+  onDelete: (entry: Entry) => void;
 };
 export const EntryForm = ({
   form: {
@@ -34,36 +33,16 @@ export const EntryForm = ({
     watch,
   },
   selectedEntry,
-  setSelectedEntry,
-  entries,
-  setEntries,
+  onSubmit,
+  onDelete,
   ...props
 }: EntryFormProps) => {
-  const handleEntryFormSubmit = (entry: Entry) => {
-    setSelectedEntry(entry);
-    const index = entries.findIndex((e) => e.id === entry.id);
-    if (index === -1) {
-      setEntries([...entries, entry]);
-      return;
-    }
-    entries[index] = entry;
-    setEntries(entries);
-  };
-
-  const handleEntryDelete = (entry: Entry) => {
-    if (!entry.id) return;
-    setSelectedEntry(undefined);
-    const index = entries.findIndex((e) => e.id === entry.id);
-    if (index === -1) return;
-    entries.splice(index, 1);
-    setEntries(entries);
-  };
 
   const values = watch();
 
   return (
     <Box {...props}>
-      <form onSubmit={handleSubmit(handleEntryFormSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <VStack>
           <FormControl isInvalid={!!dirtyFields.url && !!errors.url}>
             <HStack>
@@ -157,7 +136,7 @@ export const EntryForm = ({
             )}
             {!!selectedEntry && (
               <Button
-                onClick={() => handleEntryDelete(selectedEntry)}
+                onClick={() => onDelete(selectedEntry)}
                 leftIcon={<DeleteIcon />}
                 colorScheme="red"
               >
