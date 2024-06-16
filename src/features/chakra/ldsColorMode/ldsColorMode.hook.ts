@@ -6,14 +6,14 @@ export type LdsColorMode = "light" | "dark" | "system";
 
 export const useLdsColorMode = () => {
   const { storedData, sendToStorage } = useExtensionStorage<LdsColorMode>("colorMode", "system");
-  const { setColorMode: setChakraColorMode } = useColorMode();
+  const { setColorMode } = useColorMode();
   const systemColorMode = useColorModePreference();
 
   const handleLdsColorModeChange = (value: LdsColorMode) => {
     if (value === "system") {
-      setChakraColorMode(systemColorMode);
+      setColorMode(systemColorMode);
     } else {
-      setChakraColorMode(value);
+      setColorMode(value);
     }
     sendToStorage(value);
   };
