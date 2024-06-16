@@ -1,4 +1,4 @@
-import { HStack } from "@chakra-ui/react";
+import { Wrap } from "@chakra-ui/react";
 import { EntryLink } from "./EntryLink";
 import useExtensionStorage from "./extenstion-storage.hook";
 import { Entry } from "./entry.entity";
@@ -16,10 +16,10 @@ export const Entries = () => {
     new URLSearchParams(window.location.search).get("q") ||
     "";
   return (
-    <HStack>
+    <Wrap p="1rem" maxWidth="30vw">
       {entries?.map((entry) => (
         <EntryLink entry={entry} key={entry.id} search={search} />
       ))}
-    </HStack>
+    </Wrap>
   );
 };
