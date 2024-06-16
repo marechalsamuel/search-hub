@@ -18,6 +18,5 @@ Made with
 - chakra-ui
 
 ## TODO
-- fix colorMode
 - tuto browser permissions
 - option : open in new tab
