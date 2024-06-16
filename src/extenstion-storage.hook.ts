@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 
 type StorageChange = browser.storage.StorageChange | chrome.storage.StorageChange
-const useExtensionStorage = <T>(key: string) => {
-    const [storedData, setStoredData] = useState<T | null>(null);
+const useExtensionStorage = <T>(key: string, defaultValue?: T) => {
+    const [storedData, setStoredData] = useState<T | null>(defaultValue || null);
     const storage = useMemo(() => {
         if (typeof chrome !== 'undefined' && chrome.storage) {
             // Chrome

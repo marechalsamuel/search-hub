@@ -6,8 +6,6 @@ import {
   Img,
   Heading,
   HStack,
-  useColorMode,
-  ColorMode,
   Code,
 } from "@chakra-ui/react";
 import { useLocalStorage } from "react-use";
@@ -15,11 +13,11 @@ import { EntriesManager } from "./EntriesManager";
 import useExtensionStorage from "./extenstion-storage.hook";
 import { EntryForm } from "./EntryForm";
 import { MdFullscreen } from "react-icons/md";
-import { FaMoon, FaSun } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Entry, entrySchema } from "./entry.entity";
 import { v4 as uuid } from "uuid";
+import { ColorModeSelect } from "./ColorModeSelect";
 
 const openOptionsPage = () => {
   if (
@@ -56,13 +54,6 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
     }
   }, [entries, storedData, sendToStorage]);
   const [selectedEntry, setSelectedEntry] = useState<Entry | undefined>();
-  const { colorMode, toggleColorMode } = useColorMode();
-  const { sendToStorage: sendColorModeToStorage } =
-    useExtensionStorage<ColorMode>("colorMode");
-  const handleColorToggle = () => {
-    toggleColorMode();
-    sendColorModeToStorage(colorMode === "light" ? "dark" : "light");
-  };
 
   const defaultValues = useMemo(() => {
     return selectedEntry
@@ -94,11 +85,7 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
     <Box pos="absolute" top="10px" right="10px" bottom="10px" left="10px">
       <VStack h="100%" w="100%" justify="space-between">
         <HStack justify="space-between" w="100%" align="flex-start">
-          <IconButton
-            icon={colorMode === "light" ? <FaMoon /> : <FaSun />}
-            aria-label="Fullscreen"
-            onClick={handleColorToggle}
-          />
+          <ColorModeSelect />
           <HStack alignItems="flex-end">
             <Img src="search-hub-32.png" />
             <Heading>Search Hub</Heading>
