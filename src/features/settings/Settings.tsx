@@ -7,6 +7,7 @@ import {
   Heading,
   HStack,
   Code,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { EntriesManager } from "./EntriesManager";
 import { MdFullscreen } from "react-icons/md";
@@ -18,6 +19,7 @@ import { Entry, entrySchema } from "../entry/entry.entity";
 import { LdsColorModeSwitch } from "../chakra/ldsColorMode/LdsColorModeSwitch";
 import { EntryForm } from "../entry/EntryForm";
 import { PresetSelect } from "../presets/PresetSelect";
+import { ConfirmationModal } from "../../ui/ConfirmationModal";
 
 const openOptionsPage = () => {
   if (
@@ -42,7 +44,8 @@ export type SettingsProps = {
   fullScreen?: boolean;
 };
 export const Settings = ({ fullScreen }: SettingsProps) => {
-  const { storedData: entries = [], sendToStorage: setEntries } = useExtensionStorage<Entry[]>("entries", []);
+  const { storedData: entries = [], sendToStorage: setEntries } =
+    useExtensionStorage<Entry[]>("entries", []);
   const [selectedEntry, setSelectedEntry] = useState<Entry | undefined>();
 
   const defaultValues = useMemo(() => {
@@ -70,7 +73,7 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
     setSelectedEntry(entry);
     form.setFocus("url");
   };
-    
+
   const handleEntryFormSubmit = (entry: Entry) => {
     setSelectedEntry(entry);
     const index = entries.findIndex((e) => e.id === entry.id);
@@ -82,13 +85,26 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
     setEntries(entries);
   };
 
+  const [confirmationCallback, setConfirmationCallback] =
+    useState<() => void>();
   const handleEntryDelete = (entry: Entry) => {
     if (!entry.id) return;
-    setSelectedEntry(undefined);
-    const index = entries.findIndex((e) => e.id === entry.id);
-    if (index === -1) return;
-    entries.splice(index, 1);
-    setEntries(entries);
+    onOpen();
+    setConfirmationCallback(() => () => {
+      setSelectedEntry(undefined);
+      const index = entries.findIndex((e) => e.id === entry.id);
+      if (index === -1) return;
+      entries.splice(index, 1);
+      setEntries(entries);
+      setConfirmationCallback(undefined);
+    });
+  };
+
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
+  const onConfirm = () => {
+    confirmationCallback?.();
+    onClose();
   };
 
   return (
@@ -126,6 +142,14 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
           overflowX="auto"
         />
       </VStack>
+      <ConfirmationModal
+        onConfirm={onConfirm}
+        isOpen={isOpen}
+        onClose={onClose}
+        title="Delete entry"
+      >
+        Are you sure you want to delete this entry ?
+      </ConfirmationModal>
     </Box>
   );
 };

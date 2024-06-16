@@ -19,6 +19,5 @@ Made with
 
 ## TODO
 - fix colorMode
-- valid delete
 - tuto browser permissions
 - option : open in new tab
