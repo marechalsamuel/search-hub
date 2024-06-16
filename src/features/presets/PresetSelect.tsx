@@ -47,6 +47,7 @@ export const PresetSelect = ({ onClick }: PresetSelectProps) => {
                 <Wrap>
                   {presets.map((entry) => (
                     <EntryLink
+                      key={entry.id}
                       entry={entry}
                       onClick={() => {
                         onClick({
