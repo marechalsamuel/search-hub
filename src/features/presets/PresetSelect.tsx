@@ -11,6 +11,7 @@ import {
 import { Entry } from "../entry/entry.entity";
 import { EntryLink } from "../entry/EntryLink";
 import { v4 as uuid } from "uuid";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 
 export type PresetSelectProps = {
   onClick: (entry: Entry) => void;
@@ -29,7 +30,24 @@ export const PresetSelect = ({ onClick }: PresetSelectProps) => {
     {
       id: "preset-wikipedia",
       url: "https://www.google.com/search?q=site:https://www.wikipedia.org {{search}}",
-      icon: "https://fr.wikipedia.org/static/favicon/wikipedia.ico",
+      icon: "https://www.google.com/s2/favicons?domain=www.wikipedia.org&sz=24",
+    },
+    {
+      id: "preset-reddit",
+      url: "https://www.google.com/search?q=site:https://www.reddit.com {{search}} reddit",
+      icon: "https://www.google.com/s2/favicons?domain=www.reddit.com&sz=24",
+    },
+    {
+      id: "preset-leboncoin",
+      url: "https://www.leboncoin.fr/recherche?text={{search}}",
+    },
+    {
+      id: "preset-twitter",
+      url: "https://x.com/search?q={{search}}",
+    },
+    {
+      id: "preset-gnews",
+      url: "https://news.google.com/search?q={{search}}&hl=fr&gl=FR&ceid=FR%3Afr",
     },
   ];
 
@@ -38,7 +56,7 @@ export const PresetSelect = ({ onClick }: PresetSelectProps) => {
       {({ onClose }) => (
         <>
           <PopoverTrigger>
-            <Button>Presets</Button>
+            <Button rightIcon={<ChevronDownIcon />}>Presets</Button>
           </PopoverTrigger>
           <Portal>
             <PopoverContent>
