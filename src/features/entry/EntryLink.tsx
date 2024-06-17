@@ -1,6 +1,7 @@
 import { FavIcon } from "../favicon/FavIcon";
 import { HStack, Link, LinkProps, Text } from "@chakra-ui/react";
 import { Entry } from "./entry.entity";
+import "./shake.css";
 
 export type EntryLinkProps = LinkProps & {
   disabled?: boolean;
@@ -29,8 +30,15 @@ export const EntryLink = ({
     ...(!disabled && enabledProps),
   };
 
+  const className = isActive ? "shake" : "";
+
   return (
-    <Link {...linkProps} variant="buttonSolid" userSelect={"none"}>
+    <Link
+      {...linkProps}
+      className={className}
+      variant="buttonSolid"
+      userSelect={"none"}
+    >
       <HStack>
         <FavIcon {...entry} search={search} />
         {entry.name && <Text>{entry.name}</Text>}
