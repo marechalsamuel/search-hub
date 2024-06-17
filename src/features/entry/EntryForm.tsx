@@ -18,6 +18,7 @@ import { UseFormReturn } from "react-hook-form";
 import { getFavicon } from "../favicon/favicon.helper";
 import { Entry } from "./entry.entity";
 import { EntryLink } from "./EntryLink";
+import { CopyButton } from "../../ui/CopyButton";
 
 export type EntryFormProps = Omit<BoxProps, 'onSubmit'> & {
   selectedEntry?: Entry;
@@ -56,6 +57,7 @@ export const EntryForm = ({
                 {...register("url")}
                 placeholder={"https://www.example.com/search={{search}}"}
               />
+              <CopyButton text={`{{search}}`}/>
             </HStack>
             <FormErrorMessage>{errors.url?.message}</FormErrorMessage>
           </FormControl>
