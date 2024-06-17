@@ -2,9 +2,10 @@ import { Wrap } from "@chakra-ui/react";
 import { EntryLink } from "./EntryLink";
 import useExtensionStorage from "../storage/extenstionStorage.hook";
 import { Entry } from "./entry.entity";
+import { getPresets } from "../presets/presets";
 
 export const Entries = () => {
-  const { storedData: entries } = useExtensionStorage<Entry[]>("entries", []);
+  const { storedData: entries } = useExtensionStorage<Entry[]>("entries", getPresets());
   const search =
     (
       document.body.querySelector(

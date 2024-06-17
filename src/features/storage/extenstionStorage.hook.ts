@@ -8,7 +8,7 @@ const useExtensionStorage = <T>(key: string, defaultValue: T) => {
   const [storedData, setStoredData] = useState<T>(defaultValue);
   useEffect(() => {
     storage?.local.get(key).then((result) => {
-      setStoredData(result[key]);
+      setStoredData(result[key] || defaultValue);
     });
 
     const storageChangeListener = (changes: {
@@ -23,7 +23,7 @@ const useExtensionStorage = <T>(key: string, defaultValue: T) => {
     return () => {
       storage?.local.onChanged.removeListener(storageChangeListener);
     };
-  }, [key, setStoredData]);
+  }, [defaultValue, key, setStoredData]);
 
   const sendToStorage = (data: T) => {
     storage?.local.set({ [key]: data });

@@ -22,6 +22,7 @@ import { EntryForm } from "../entry/EntryForm";
 import { PresetSelect } from "../presets/PresetSelect";
 import { ConfirmationModal } from "../../ui/ConfirmationModal";
 import { CopyIcon } from "@chakra-ui/icons";
+import { getPresets } from "../presets/presets";
 
 const openOptionsPage = () => {
   if (
@@ -47,7 +48,7 @@ export type SettingsProps = {
 };
 export const Settings = ({ fullScreen }: SettingsProps) => {
   const { storedData: entries = [], sendToStorage: setEntries } =
-    useExtensionStorage<Entry[]>("entries", []);
+    useExtensionStorage<Entry[]>("entries", getPresets());
   const [selectedEntry, setSelectedEntry] = useState<Entry | undefined>();
 
   const defaultValues = useMemo(() => {
