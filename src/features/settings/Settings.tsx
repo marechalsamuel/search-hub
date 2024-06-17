@@ -8,6 +8,7 @@ import {
   HStack,
   Code,
   useDisclosure,
+  Button,
 } from "@chakra-ui/react";
 import { EntriesManager } from "./EntriesManager";
 import { MdFullscreen } from "react-icons/md";
@@ -20,6 +21,7 @@ import { LdsColorModeSwitch } from "../chakra/ldsColorMode/LdsColorModeSwitch";
 import { EntryForm } from "../entry/EntryForm";
 import { PresetSelect } from "../presets/PresetSelect";
 import { ConfirmationModal } from "../../ui/ConfirmationModal";
+import { CopyIcon } from "@chakra-ui/icons";
 
 const openOptionsPage = () => {
   if (
@@ -107,6 +109,13 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
     onClose();
   };
 
+  const handleDuplicateButtonClick = () => {
+    if (!selectedEntry) return;
+    const newEntry = { ...selectedEntry, id: uuid() };
+    setEntries([...entries, newEntry]);
+    setSelectedEntry(newEntry);
+  };
+
   return (
     <Box pos="absolute" top="10px" right="10px" bottom="10px" left="10px">
       <VStack h="100%" w="100%" justify="space-between">
@@ -117,7 +126,8 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
             <Heading>Search Hub</Heading>
             <Code>{import.meta.env.PACKAGE_VERSION}</Code>
           </HStack>
-          <PresetSelect onClick={handleEntryFormSubmit} />
+          {!!selectedEntry && <Button leftIcon={<CopyIcon />} onClick={handleDuplicateButtonClick} >Duplicate</Button>}
+          {!selectedEntry && <PresetSelect onClick={handleEntryFormSubmit} />}
           {!fullScreen && (
             <IconButton
               icon={<MdFullscreen />}
