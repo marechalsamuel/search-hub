@@ -3,9 +3,11 @@ import { EntryLink } from "./EntryLink";
 import useExtensionStorage from "../storage/extenstionStorage.hook";
 import { Entry } from "./entry.entity";
 import { getPresets } from "../presets/presets";
+import { useMemo } from "react";
 
 export const Entries = () => {
-  const { storedData: entries } = useExtensionStorage<Entry[]>("entries", getPresets());
+  const presets = useMemo(() => getPresets(), []);
+  const { storedData: entries } = useExtensionStorage<Entry[]>("entries", presets);
   const search =
     (
       document.body.querySelector(

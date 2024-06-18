@@ -59,7 +59,6 @@ export const ClickSortableItem = ({
       key={entry.id}
       display="flex"
       alignItems="center"
-      onClick={onClick}
     >
       {onClickLeft && (
         <IconButton
@@ -125,13 +124,11 @@ export const DragSortableItem = ({
       key={entry.id}
       display="flex"
       alignItems="center"
-      onClick={onClick}
     >
       <IconButton
         aria-label="Reorder"
         ref={setActivatorNodeRef}
         {...listeners}
-        onClick={onClick}
         cursor="grab"
         _active={{
           cursor: "grabbing",

@@ -47,8 +47,9 @@ export type SettingsProps = {
   fullScreen?: boolean;
 };
 export const Settings = ({ fullScreen }: SettingsProps) => {
+  const presets = useMemo(() => getPresets(), []);
   const { storedData: entries = [], sendToStorage: setEntries } =
-    useExtensionStorage<Entry[]>("entries", getPresets());
+    useExtensionStorage<Entry[]>("entries", presets);
   const [selectedEntry, setSelectedEntry] = useState<Entry | undefined>();
 
   const defaultValues = useMemo(() => {

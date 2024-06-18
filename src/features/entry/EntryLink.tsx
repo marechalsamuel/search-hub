@@ -11,7 +11,7 @@ export type EntryLinkProps = LinkProps & {
 };
 export const EntryLink = ({
   entry,
-  search = "",
+  search = "{{search}}",
   disabled,
   isActive,
   ...props

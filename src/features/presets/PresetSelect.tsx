@@ -1,3 +1,4 @@
+import { MouseEventHandler, useMemo } from "react";
 import {
   Button,
   Popover,
@@ -17,6 +18,7 @@ export type PresetSelectProps = {
   onClick: (entry: Entry) => void;
 };
 export const PresetSelect = ({ onClick }: PresetSelectProps) => {
+  const presets = useMemo(() => getPresets(), []);
   return (
     <Popover>
       {({ onClose }) => (
@@ -29,17 +31,15 @@ export const PresetSelect = ({ onClick }: PresetSelectProps) => {
               <PopoverArrow />
               <PopoverBody>
                 <Wrap>
-                  {getPresets().map((entry) => (
+                  {presets.map((entry) => (
                     <EntryLink
-                      disabled
                       key={entry.id}
                       entry={entry}
-                      onClick={() => {
-                        onClick({
-                          ...entry,
-                        });
+                      onClick={((e) => {
+                        e.preventDefault();
+                        onClick(entry);
                         onClose();
-                      }}
+                      }) as MouseEventHandler<HTMLAnchorElement>}
                     />
                   ))}
                 </Wrap>
