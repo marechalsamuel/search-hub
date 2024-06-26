@@ -142,7 +142,7 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
           <LdsColorModeSwitch />
           <HStack alignItems="flex-end">
             <Img src="search-hub-32.png" onClick={handleLogoClick}/>
-            <Heading>{countLogoClick} Search Hub</Heading>
+            <Heading>Search Hub</Heading>
             <Code>{import.meta.env.PACKAGE_VERSION}</Code>
           </HStack>
           {!!selectedEntry && <Button leftIcon={<CopyIcon />} onClick={handleDuplicateButtonClick} >Duplicate</Button>}
