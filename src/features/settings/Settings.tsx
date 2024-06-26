@@ -118,14 +118,31 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
     setSelectedEntry(newEntry);
   };
 
+  const [countLogoClick, setCountLogoClick] = useState(0);
+
+  const handleLogoClick = () => setCountLogoClick(prevCount => prevCount + 1);
+
+  useEffect(() => {
+    if (countLogoClick > 12) {
+      alert("With the kind participation of chien barbu and chien moustachu");
+    }
+  }, [countLogoClick]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCountLogoClick(prevCount => Math.max(0, prevCount - 1));
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Box pos="absolute" top="10px" right="10px" bottom="10px" left="10px">
       <VStack h="100%" w="100%" justify="space-between">
         <HStack justify="space-between" w="100%" align="flex-start">
           <LdsColorModeSwitch />
           <HStack alignItems="flex-end">
-            <Img src="search-hub-32.png" />
-            <Heading>Search Hub</Heading>
+            <Img src="search-hub-32.png" onClick={handleLogoClick}/>
+            <Heading>{countLogoClick} Search Hub</Heading>
             <Code>{import.meta.env.PACKAGE_VERSION}</Code>
           </HStack>
           {!!selectedEntry && <Button leftIcon={<CopyIcon />} onClick={handleDuplicateButtonClick} >Duplicate</Button>}

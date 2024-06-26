@@ -13,7 +13,7 @@ export const getPresets = (): Entry[] => [
   },
   {
     id: uuid(), // wikipedia,
-    url: "https://www.google.com/search?q=site:https://www.wikipedia.org {{search}}",
+    url: "https://www.google.com/search?q=wikipedia {{search}}",
     icon: "https://www.google.com/s2/favicons?domain=www.wikipedia.org&sz=24",
   },
   {
@@ -31,6 +31,6 @@ export const getPresets = (): Entry[] => [
   },
   {
     id: uuid(), // gnews,
-    url: "https://news.google.com/search?q={{search}}&hl=fr&gl=FR&ceid=FR%3Afr",
+    url: "https://news.google.com/search?q={{search}}",
   },
 ];
