@@ -53,14 +53,8 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
   const [selectedEntry, setSelectedEntry] = useState<Entry | undefined>();
 
   const defaultValues = useMemo(() => {
-    return selectedEntry
-      ? selectedEntry
-      : {
-          id: uuid(),
-          name: "",
-          icon: "",
-          url: "",
-        };
+    const { id = uuid(), name = "", icon = "", url = "" } = selectedEntry || {};
+    return { id, name, icon, url };
   }, [selectedEntry]);
 
   const form = useForm<Entry>({
@@ -120,7 +114,7 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
 
   const [countLogoClick, setCountLogoClick] = useState(0);
 
-  const handleLogoClick = () => setCountLogoClick(prevCount => prevCount + 1);
+  const handleLogoClick = () => setCountLogoClick((prevCount) => prevCount + 1);
 
   useEffect(() => {
     if (countLogoClick > 12) {
@@ -130,7 +124,7 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCountLogoClick(prevCount => Math.max(0, prevCount - 1));
+      setCountLogoClick((prevCount) => Math.max(0, prevCount - 1));
     }, 500);
     return () => clearInterval(interval);
   }, []);
@@ -141,11 +135,18 @@ export const Settings = ({ fullScreen }: SettingsProps) => {
         <HStack justify="space-between" w="100%" align="flex-start">
           <LdsColorModeSwitch />
           <HStack alignItems="flex-end">
-            <Img src="search-hub-32.png" onClick={handleLogoClick}/>
+            <Img src="search-hub-32.png" onClick={handleLogoClick} />
             <Heading>Search Hub</Heading>
             <Code>{import.meta.env.PACKAGE_VERSION}</Code>
           </HStack>
-          {!!selectedEntry && <Button leftIcon={<CopyIcon />} onClick={handleDuplicateButtonClick} >Duplicate</Button>}
+          {!!selectedEntry && (
+            <Button
+              leftIcon={<CopyIcon />}
+              onClick={handleDuplicateButtonClick}
+            >
+              Duplicate
+            </Button>
+          )}
           {!selectedEntry && <PresetSelect onClick={handleEntryFormSubmit} />}
           {!fullScreen && (
             <IconButton
